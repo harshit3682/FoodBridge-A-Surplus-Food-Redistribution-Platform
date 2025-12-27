@@ -535,3 +535,4 @@ Displays real-time statistics in gradient cards:
 ---
 
 This comprehensive dashboard system provides a complete solution for surplus food redistribution with intuitive interfaces for both donors and NGOs, real-time tracking, and powerful analytics capabilities.
+

@@ -25,7 +25,7 @@ import {
   Speed,
   Security,
 } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../config/axios';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ const Landing = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('/api/stats/public');
+      const response = await api.get('/api/stats/public');
       if (response.data.success) {
         setStats(response.data.data);
         setRecentDonations(response.data.data.recentDonations || []);
@@ -834,3 +834,4 @@ const Landing = () => {
 };
 
 export default Landing;
+

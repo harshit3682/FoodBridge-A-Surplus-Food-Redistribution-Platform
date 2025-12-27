@@ -14,7 +14,7 @@ import {
   AccessTime,
   TrendingUp,
 } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../config/axios';
 import { useAuth } from '../context/AuthContext';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -63,8 +63,8 @@ const Analytics = () => {
         setStats(statsData);
       } else {
         const [listingsRes, claimsRes] = await Promise.all([
-          axios.get('/api/listings/available'),
-          axios.get('/api/claims/mine'),
+          api.get('/api/listings/available'),
+          api.get('/api/claims/mine'),
         ]);
 
         const availableListings = listingsRes.data.data;

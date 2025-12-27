@@ -34,7 +34,7 @@ import {
   QrCode,
   Verified,
 } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../config/axios';
 import { useAuth } from '../context/AuthContext';
 import { io } from 'socket.io-client';
 import { QRCodeSVG } from 'qrcode.react';
@@ -66,7 +66,7 @@ const DonorDashboard = () => {
     fetchClaims();
 
     // Set up Socket.io connection
-    const apiUrl = import.meta.env.VITE_API_URL || window.location.origin.replace(':3000', ':5000') || 'http://localhost:5000';
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://foodbridge-a-surplus-food-redistribution.onrender.com';
     socketRef.current = io(apiUrl, {
       transports: ['websocket', 'polling']
     });
@@ -97,7 +97,7 @@ const DonorDashboard = () => {
 
   const fetchClaims = async () => {
     try {
-      const response = await axios.get('/api/claims/received');
+      const response = await api.get('/api/claims/received');
       setClaims(response.data.data);
     } catch (error) {
       console.error('Error fetching claims:', error);
@@ -110,7 +110,7 @@ const DonorDashboard = () => {
       const availableUntil = new Date(formData.availableUntil);
       const availableFrom = new Date();
 
-      await axios.post('/api/listings', {
+      await api.post('/api/listings', {
         ...formData,
         availableFrom: availableFrom.toISOString(),
         availableUntil: availableUntil.toISOString(),
@@ -139,7 +139,7 @@ const DonorDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this listing?')) return;
 
     try {
-      await axios.delete(`/api/listings/${id}`);
+      await api.delete(`/api/listings/${id}`);
       fetchListings();
       fetchClaims();
     } catch (error) {
@@ -157,7 +157,7 @@ const DonorDashboard = () => {
         payload = { rejectedReason: reason || 'Rejected by donor' };
       }
       
-      const response = await axios.patch(`/api/claims/${claimId}/${action}`, payload);
+      const response = await api.patch(`/api/claims/${claimId}/${action}`, payload);
       
       // If accepting, show verification code
       if (action === 'accept' && response.data.verificationCode) {
@@ -253,7 +253,7 @@ const DonorDashboard = () => {
     }
 
     try {
-      const response = await axios.post(`/api/claims/${verificationDialog.claim._id}/verify`, {
+      const response = await api.post(`/api/claims/${verificationDialog.claim._id}/verify`, {
         verificationCode: verificationCode
       });
 

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import api from '../config/axios';
 
 const AuthContext = createContext();
 
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = useCallback(async () => {
     try {
-      const response = await axios.get('/api/auth/me', {
+      const response = await api.get('/api/auth/me', {
         timeout: 5000 // 5 second timeout
       });
       if (response.data?.user) {
@@ -49,10 +49,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, [logout]);
 
-  // Set axios default header
+  // Fetch user on mount if token exists
   useEffect(() => {
     if (token && token.trim() !== '') {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       fetchUser();
     } else {
       setLoading(false);
@@ -79,13 +78,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post('/api/auth/register', userData);
+      const response = await api.post('/api/auth/register', userData);
       const { token, user } = response.data;
       setToken(token);
       setUser(user);
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       return { success: true };
     } catch (error) {
       return {
