@@ -21,11 +21,42 @@ import Layout from "./components/Layout";
 
 const theme = createTheme({
   palette: {
+    mode: "dark",
     primary: {
-      main: "#2e7d32", // Green theme for sustainability
+      main: "#4caf50", // Green theme for sustainability
+      light: "#81c784",
+      dark: "#388e3c",
     },
     secondary: {
-      main: "#f57c00", // Orange accent
+      main: "#ff9800", // Orange accent
+      light: "#ffb74d",
+      dark: "#f57c00",
+    },
+    background: {
+      default: "#121212",
+      paper: "#1e1e1e",
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "rgba(255, 255, 255, 0.7)",
+    },
+  },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#1e1e1e",
+          backgroundImage: "none",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#1e1e1e",
+          backgroundImage: "none",
+        },
+      },
     },
   },
 });
