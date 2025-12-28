@@ -1,62 +1,34 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
-import api from '../config/axios';
+import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(() => {
-    try {
-      return localStorage.getItem('token');
-    } catch (error) {
-      console.error('Error accessing localStorage:', error);
-      return null;
-    }
-  });
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
-  const logout = useCallback(() => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    delete axios.defaults.headers.common['Authorization'];
-  }, []);
-
-  const fetchUser = useCallback(async () => {
-    try {
-      const response = await api.get('/api/auth/me', {
-        timeout: 5000 // 5 second timeout
-      });
-      if (response.data?.user) {
-        setUser(response.data.user);
-      }
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      // Clear invalid token and logout
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        logout();
-      } else if (error.code === 'ECONNABORTED' || error.message === 'Network Error') {
-        // Network error or timeout - clear token and show login
-        console.warn('Backend connection failed, clearing auth state');
-        logout();
-      } else {
-        // Other errors - just clear loading
-        setLoading(false);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [logout]);
-
-  // Fetch user on mount if token exists
+  // Set axios default header
   useEffect(() => {
-    if (token && token.trim() !== '') {
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       fetchUser();
     } else {
       setLoading(false);
     }
-  }, [token, fetchUser]);
+  }, [token]);
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get('/api/auth/me');
+      setUser(response.data.user);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      logout();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const login = async (email, password) => {
     try {
@@ -78,12 +50,13 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await api.post('/api/auth/register', userData);
+      const response = await axios.post('/api/auth/register', userData);
       const { token, user } = response.data;
       setToken(token);
       setUser(user);
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       return { success: true };
     } catch (error) {
       return {
@@ -93,6 +66,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    delete axios.defaults.headers.common['Authorization'];
+  };
 
   return (
     <AuthContext.Provider value={{ user, loading, login, register, logout }}>

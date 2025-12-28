@@ -40,7 +40,7 @@ import {
   Directions,
   FilterList,
 } from '@mui/icons-material';
-import api from '../config/axios';
+import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -220,7 +220,7 @@ const NGODashboard = () => {
 
   const fetchAvailableListings = async () => {
     try {
-      const response = await api.get('/api/listings/available');
+      const response = await axios.get('/api/listings/available');
       setListings(response.data.data);
     } catch (error) {
       console.error('Error fetching listings:', error);
@@ -231,7 +231,7 @@ const NGODashboard = () => {
 
   const fetchMyClaims = async () => {
     try {
-      const response = await api.get('/api/claims/mine');
+      const response = await axios.get('/api/claims/mine');
       setClaims(response.data.data);
     } catch (error) {
       console.error('Error fetching claims:', error);
@@ -240,7 +240,7 @@ const NGODashboard = () => {
 
   const handleClaim = async () => {
     try {
-      await api.post('/api/claims', {
+      await axios.post('/api/claims', {
         listingId: claimDialog.listing._id,
         message: claimMessage,
       });

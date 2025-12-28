@@ -1,26 +1,31 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { AuthProvider } from './context/AuthContext';
-import ErrorBoundary from './components/ErrorBoundary';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Landing from './pages/Landing';
-import DonorDashboard from './pages/DonorDashboard';
-import NGODashboard from './pages/NGODashboard';
-import Analytics from './pages/Analytics';
-import PrivateRoute from './components/PrivateRoute';
-import RoleRoute from './components/RoleRoute';
-import Layout from './components/Layout';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { AuthProvider } from "./context/AuthContext";
+import ErrorBoundary from "./components/ErrorBoundary";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import Landing from "./pages/Landing.jsx";
+import DonorDashboard from "./pages/DonorDashboard.jsx";
+import NGODashboard from "./pages/NGODashboard.jsx";
+import Analytics from "./pages/Analytics.jsx";
+import PrivateRoute from "./components/PrivateRoute";
+import RoleRoute from "./components/RoleRoute";
+import Layout from "./components/Layout";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#2e7d32', // Green theme for sustainability
+      main: "#2e7d32", // Green theme for sustainability
     },
     secondary: {
-      main: '#f57c00', // Orange accent
+      main: "#f57c00", // Orange accent
     },
   },
 });
@@ -28,60 +33,59 @@ const theme = createTheme({
 function App() {
   return (
     <ErrorBoundary>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AuthProvider>
-        <Router
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/donor"
-              element={
-                <PrivateRoute>
-                  <RoleRoute allowedRoles={['DONOR']}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AuthProvider>
+          <Router
+            future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true,
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/donor"
+                element={
+                  <PrivateRoute>
+                    <RoleRoute allowedRoles={["DONOR"]}>
+                      <Layout>
+                        <DonorDashboard />
+                      </Layout>
+                    </RoleRoute>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/ngo"
+                element={
+                  <PrivateRoute>
+                    <RoleRoute allowedRoles={["NGO"]}>
+                      <Layout>
+                        <NGODashboard />
+                      </Layout>
+                    </RoleRoute>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/analytics"
+                element={
+                  <PrivateRoute>
                     <Layout>
-                      <DonorDashboard />
+                      <Analytics />
                     </Layout>
-                  </RoleRoute>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/ngo"
-              element={
-                <PrivateRoute>
-                  <RoleRoute allowedRoles={['NGO']}>
-                    <Layout>
-                      <NGODashboard />
-                    </Layout>
-                  </RoleRoute>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/analytics"
-              element={
-                <PrivateRoute>
-                  <Layout>
-                    <Analytics />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-          </Routes>
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }
 
 export default App;
-

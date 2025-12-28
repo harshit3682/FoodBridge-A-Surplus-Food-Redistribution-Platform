@@ -14,9 +14,6 @@ services:
         sync: false
       - key: JWT_SECRET
         sync: false
-      - key: CLIENT_URL
-        sync: false
-        # Set this to your frontend URL after deploying (e.g., https://your-app.vercel.app)
-      - key: FRONTEND_URL
-        sync: false
-        # Alternative name for CLIENT_URL
+
+
+
