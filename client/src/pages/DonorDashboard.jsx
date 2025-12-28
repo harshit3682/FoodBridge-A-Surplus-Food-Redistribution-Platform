@@ -36,6 +36,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../config/api';
 import { io } from 'socket.io-client';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -66,7 +67,7 @@ const DonorDashboard = () => {
     fetchClaims();
 
     // Set up Socket.io connection
-    const apiUrl = import.meta.env.VITE_API_URL || window.location.origin.replace(':3000', ':5000') || 'http://localhost:5000';
+    const apiUrl = API_URL;
     socketRef.current = io(apiUrl, {
       transports: ['websocket', 'polling']
     });
@@ -86,8 +87,7 @@ const DonorDashboard = () => {
 
   const fetchListings = async () => {
     try {
-      const API = import.meta.env.VITE_API_URL;
-      const response = await axios.get(`${API}/api/listings/mine`);
+      const response = await axios.get(`${API_URL}/api/listings/mine`);
       setListings(response.data.data);
     } catch (error) {
       console.error('Error fetching listings:', error);
@@ -98,8 +98,7 @@ const DonorDashboard = () => {
 
   const fetchClaims = async () => {
     try {
-      const API = import.meta.env.VITE_API_URL;
-      const response = await axios.get(`${API}/api/claims/received`);
+      const response = await axios.get(`${API_URL}/api/claims/received`);
       setClaims(response.data.data);
     } catch (error) {
       console.error('Error fetching claims:', error);
@@ -112,7 +111,7 @@ const DonorDashboard = () => {
       const availableUntil = new Date(formData.availableUntil);
       const availableFrom = new Date();
 
-      await axios.post(`${API}/api/listings`, {
+      await axios.post(`${API_URL}/api/listings`, {
         ...formData,
         availableFrom: availableFrom.toISOString(),
         availableUntil: availableUntil.toISOString(),
@@ -141,7 +140,7 @@ const DonorDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this listing?')) return;
 
     try {
-      await axios.delete(`${API}/api/listings/${id}`);
+      await axios.delete(`${API_URL}/api/listings/${id}`);
       fetchListings();
       fetchClaims();
     } catch (error) {
@@ -159,7 +158,7 @@ const DonorDashboard = () => {
         payload = { rejectedReason: reason || 'Rejected by donor' };
       }
       
-      const response = await axios.patch(`${API}/api/claims/${claimId}/${action}`, payload);
+      const response = await axios.patch(`${API_URL}/api/claims/${claimId}/${action}`, payload);
       
       // If accepting, show verification code
       if (action === 'accept' && response.data.verificationCode) {
@@ -255,7 +254,7 @@ const DonorDashboard = () => {
     }
 
     try {
-      const response = await axios.post(`${API}/api/claims/${verificationDialog.claim._id}/verify`, {
+      const response = await axios.post(`${API_URL}/api/claims/${verificationDialog.claim._id}/verify`, {
         verificationCode: verificationCode
       });
 

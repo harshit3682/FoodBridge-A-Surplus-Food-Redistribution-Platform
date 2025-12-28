@@ -16,6 +16,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../config/api';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -42,8 +43,8 @@ const Analytics = () => {
     try {
       if (user?.role === 'DONOR') {
         const [listingsRes, claimsRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/listings/mine`),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/claims/received`),
+          axios.get(`${API_URL}/api/listings/mine`),
+          axios.get(`${API_URL}/api/claims/received`),
         ]);
 
         const myListings = listingsRes.data.data;
@@ -63,8 +64,8 @@ const Analytics = () => {
         setStats(statsData);
       } else {
         const [listingsRes, claimsRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/listings/available`),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/claims/mine`),
+          axios.get(`${API_URL}/api/listings/available`),
+          axios.get(`${API_URL}/api/claims/mine`),
         ]);
 
         const availableListings = listingsRes.data.data;

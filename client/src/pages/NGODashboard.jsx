@@ -42,6 +42,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../config/api';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -220,8 +221,7 @@ const NGODashboard = () => {
 
   const fetchAvailableListings = async () => {
     try {
-      const API = import.meta.env.VITE_API_URL;
-      const response = await axios.get(`${API}/api/listings/available`);
+      const response = await axios.get(`${API_URL}/api/listings/available`);
       setListings(response.data.data);
     } catch (error) {
       console.error('Error fetching listings:', error);
@@ -232,8 +232,7 @@ const NGODashboard = () => {
 
   const fetchMyClaims = async () => {
     try {
-      const API = import.meta.env.VITE_API_URL;
-      const response = await axios.get(`${API}/api/claims/mine`);
+      const response = await axios.get(`${API_URL}/api/claims/mine`);
       setClaims(response.data.data);
     } catch (error) {
       console.error('Error fetching claims:', error);
@@ -242,7 +241,7 @@ const NGODashboard = () => {
 
   const handleClaim = async () => {
     try {
-      await axios.post(`${API}/api/claims`, {
+      await axios.post(`${API_URL}/api/claims`, {
         listingId: claimDialog.listing._id,
         message: claimMessage,
       });

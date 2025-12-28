@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 
 const AuthContext = createContext();
 
@@ -18,11 +19,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  const API = import.meta.env.VITE_API_URL;
-
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`${API}/api/auth/me`);
+      const response = await axios.get(`${API_URL}/api/auth/me`);
       setUser(response.data.user);
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(`${API}/api/auth/login`, { email, password });
+      const response = await axios.post(`${API_URL}/api/auth/login`, { email, password });
       const { token, user } = response.data;
       setToken(token);
       setUser(user);
@@ -53,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   // Register function uses shared API variable
   const register = async (userData) => {
     try {
-      const response = await axios.post(`${API}/api/auth/register`, userData);
+      const response = await axios.post(`${API_URL}/api/auth/register`, userData);
       const { token, user } = response.data;
       setToken(token);
       setUser(user);
