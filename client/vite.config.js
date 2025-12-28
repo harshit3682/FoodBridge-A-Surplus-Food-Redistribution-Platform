@@ -20,6 +20,10 @@ export default defineConfig({
       "qrcode.react",
     ],
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    outDir: "dist",
+  },
   server: {
     port: process.env.PORT,
     strictPort: true,
