@@ -220,7 +220,8 @@ const NGODashboard = () => {
 
   const fetchAvailableListings = async () => {
     try {
-      const response = await axios.get('/api/listings/available');
+      const API = import.meta.env.VITE_API_URL;
+      const response = await axios.get(`${API}/api/listings/available`);
       setListings(response.data.data);
     } catch (error) {
       console.error('Error fetching listings:', error);
@@ -231,7 +232,8 @@ const NGODashboard = () => {
 
   const fetchMyClaims = async () => {
     try {
-      const response = await axios.get('/api/claims/mine');
+      const API = import.meta.env.VITE_API_URL;
+      const response = await axios.get(`${API}/api/claims/mine`);
       setClaims(response.data.data);
     } catch (error) {
       console.error('Error fetching claims:', error);
@@ -240,7 +242,7 @@ const NGODashboard = () => {
 
   const handleClaim = async () => {
     try {
-      await axios.post('/api/claims', {
+      await axios.post(`${API}/api/claims`, {
         listingId: claimDialog.listing._id,
         message: claimMessage,
       });

@@ -36,21 +36,32 @@ app.use("/api/listings", require("./routes/listings"));
 app.use("/api/claims", require("./routes/claims"));
 
 // Parse PORT as a number so we can increment it if needed
-const BASE_PORT = parseInt(process.env.PORT);
+const BASE_PORT = parseInt(process.env.PORT) || 3000;
 
-// Start server with Port Fallback Logic
 const startServer = async () => {
   await connectDB();
   startExpireJob();
-  const attemptListen = (port) => {
-    const server = app.listen(port, () => {
-      console.log(`🚀 Server running on port ${port}`);
-    });
+
+  // Listen on the next available port if previous one is in use
+  const tryListen = (port) => {
+    const server = app
+      .listen(port, () => {
+        console.log(`🚀 Server running on port ${port}`);
+      })
+      .on("error", (err) => {
+        if (err.code === "EADDRINUSE") {
+          console.warn(`⚠️  Port ${port} in use, trying port ${port + 1}...`);
+          tryListen(port + 1);
+        } else {
+          console.error("Server error:", err);
+          process.exit(1);
+        }
+      });
   };
-  attemptListen(BASE_PORT);
+
+  tryListen(BASE_PORT);
 };
 
-// Call the server starter!
 startServer();
 
 module.exports = app;

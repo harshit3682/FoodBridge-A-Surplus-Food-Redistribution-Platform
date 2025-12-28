@@ -86,7 +86,8 @@ const DonorDashboard = () => {
 
   const fetchListings = async () => {
     try {
-      const response = await axios.get('/api/listings/mine');
+      const API = import.meta.env.VITE_API_URL;
+      const response = await axios.get(`${API}/api/listings/mine`);
       setListings(response.data.data);
     } catch (error) {
       console.error('Error fetching listings:', error);
@@ -97,7 +98,8 @@ const DonorDashboard = () => {
 
   const fetchClaims = async () => {
     try {
-      const response = await axios.get('/api/claims/received');
+      const API = import.meta.env.VITE_API_URL;
+      const response = await axios.get(`${API}/api/claims/received`);
       setClaims(response.data.data);
     } catch (error) {
       console.error('Error fetching claims:', error);
@@ -110,7 +112,7 @@ const DonorDashboard = () => {
       const availableUntil = new Date(formData.availableUntil);
       const availableFrom = new Date();
 
-      await axios.post('/api/listings', {
+      await axios.post(`${API}/api/listings`, {
         ...formData,
         availableFrom: availableFrom.toISOString(),
         availableUntil: availableUntil.toISOString(),
@@ -139,7 +141,7 @@ const DonorDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this listing?')) return;
 
     try {
-      await axios.delete(`/api/listings/${id}`);
+      await axios.delete(`${API}/api/listings/${id}`);
       fetchListings();
       fetchClaims();
     } catch (error) {
@@ -157,7 +159,7 @@ const DonorDashboard = () => {
         payload = { rejectedReason: reason || 'Rejected by donor' };
       }
       
-      const response = await axios.patch(`/api/claims/${claimId}/${action}`, payload);
+      const response = await axios.patch(`${API}/api/claims/${claimId}/${action}`, payload);
       
       // If accepting, show verification code
       if (action === 'accept' && response.data.verificationCode) {
@@ -253,7 +255,7 @@ const DonorDashboard = () => {
     }
 
     try {
-      const response = await axios.post(`/api/claims/${verificationDialog.claim._id}/verify`, {
+      const response = await axios.post(`${API}/api/claims/${verificationDialog.claim._id}/verify`, {
         verificationCode: verificationCode
       });
 

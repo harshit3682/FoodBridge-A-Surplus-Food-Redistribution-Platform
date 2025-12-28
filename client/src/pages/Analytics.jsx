@@ -42,8 +42,8 @@ const Analytics = () => {
     try {
       if (user?.role === 'DONOR') {
         const [listingsRes, claimsRes] = await Promise.all([
-          axios.get('/api/listings/mine'),
-          axios.get('/api/claims/received'),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/listings/mine`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/claims/received`),
         ]);
 
         const myListings = listingsRes.data.data;
@@ -63,8 +63,8 @@ const Analytics = () => {
         setStats(statsData);
       } else {
         const [listingsRes, claimsRes] = await Promise.all([
-          axios.get('/api/listings/available'),
-          axios.get('/api/claims/mine'),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/listings/available`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/claims/mine`),
         ]);
 
         const availableListings = listingsRes.data.data;
