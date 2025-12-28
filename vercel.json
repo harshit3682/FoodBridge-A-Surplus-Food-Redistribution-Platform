@@ -16,7 +16,7 @@
     }
   ],
   "env": {
-    "REACT_APP_API_URL": "@api-url"
+    "VITE_API_URL": "https://foodbridge-a-surplus-food-redistribution.onrender.com"
   }
 }
 
