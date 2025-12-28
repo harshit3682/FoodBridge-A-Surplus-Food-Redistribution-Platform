@@ -1,0 +1,8 @@
+# Ignore parent directory files that might confuse Vercel
+../server.js
+../package.json
+../routes
+../models
+../middleware
+../jobs
+

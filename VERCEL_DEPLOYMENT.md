@@ -1,14 +1,65 @@
 # Vercel Deployment Guide
 
-## ⚠️ CRITICAL: Choose One Deployment Method
+## ✅ CURRENT SETUP (Root Directory = `client`)
 
-You have **TWO options** for deploying this project. Choose the one that works best for you.
+Your project is configured with Root Directory set to `client` in Vercel settings.
+
+### Current Configuration:
+
+- **Root Directory**: `client` (set in Vercel project settings)
+- **vercel.json**: Located in `client/vercel.json`
+- **Build Output**: `client/dist/`
+
+### The `client/vercel.json` file contains:
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_API_URL": "https://foodbridge-a-surplus-food-redistribution.onrender.com"
+  }
+}
+```
+
+This minimal configuration lets Vercel:
+
+- Auto-detect Vite framework
+- Run `npm install` and `npm run build` automatically
+- Find output in `dist/` directory
+- Handle SPA routing with rewrites
 
 ---
 
-## Method 1: Set Root Directory (RECOMMENDED - Easiest)
+## ⚠️ If You Get "No Entrypoint Found" Error
 
-This is the **recommended approach** and will make Vercel auto-detect Vite correctly.
+This error occurs when Vercel tries to find serverless functions after the static build. To fix:
+
+1. **Verify Root Directory is set to `client`**:
+
+   - Go to Vercel Dashboard → Your Project → Settings → General
+   - Ensure "Root Directory" is set to: `client`
+   - If not, set it and save
+
+2. **Ensure `client/vercel.json` exists** with the content above (minimal, no buildCommand needed)
+
+3. **Verify Environment Variable**:
+
+   - Go to Settings → Environment Variables
+   - Add `VITE_API_URL` = `https://foodbridge-a-surplus-food-redistribution.onrender.com`
+   - Apply to: Production, Preview, Development
+
+4. **Redeploy** after making changes
+
+---
+
+## Alternative: If Root Directory is NOT Set
+
+If you cannot set Root Directory to `client`, you would need a different configuration, but this is NOT recommended as it causes the "No entrypoint found" error.
 
 ### Steps:
 
@@ -21,8 +72,8 @@ This is the **recommended approach** and will make Vercel auto-detect Vite corre
 
 ### After setting Root Directory:
 
-1. **Delete or rename** the current `vercel.json` (or update it to be simpler)
-2. Create a new `vercel.json` in the **root** directory with this content:
+1. Ensure `client/vercel.json` exists with minimal content (see above)
+2. Create a new `vercel.json` in the **root** directory with this content (NOT RECOMMENDED):
 
 ```json
 {
