@@ -96,3 +96,4 @@ Rescue_Food/
 
 **Key Point**: With Root Directory = `client`, Vercel only sees the `client/` directory and ignores the root-level backend files.
 
+

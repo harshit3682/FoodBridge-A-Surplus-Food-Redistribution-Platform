@@ -17,7 +17,6 @@ import {
   Analytics,
   Login as LoginIcon,
   PersonAdd,
-  Eco,
   AccessTime,
   LocationOn,
   Verified,
@@ -147,7 +146,7 @@ const Landing = () => {
               <Card sx={{ height: "100%", bgcolor: "background.paper" }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box display="flex" alignItems="center" mb={2}>
-                    <Eco sx={{ fontSize: 40, color: "primary.main", mr: 2 }} />
+                    <TrendingUp sx={{ fontSize: 40, color: "primary.main", mr: 2 }} />
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Our Mission
                     </Typography>
